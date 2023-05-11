@@ -12,7 +12,8 @@ pipeline {
                 sh 'rm -fr *.zip'
                 sh 'zip -r college-$BUILD_NUMBER.zip *'
                 sh 'aws s3 cp college-$BUILD_NUMBER.zip s3://python-flask-application/'
-                sh 'scp dependencies.sh root@172.31.9.96:/home/ec2-user/'
+                sh 'scp dependencies.sh ec2-user@172.31.9.96:/home/ec2-user/'
+                sh 'ssh ec2-user@172.31.9.96 "sh dependencies.sh"'
                 sh 'rm -fr *'
                 echo 'Flask application built successfully!'
             }
@@ -21,11 +22,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying Flask application...'
-                sh 'ssh root@172.31.9.96 "cd /home/ec2-user/ && sudo rm -rf *"'
+                sh 'ssh ec2-user@172.31.9.96 "cd /home/ec2-user/ && sudo rm -rf *"'
                 sh 'aws s3 cp s3://python-flask-application/college-$number.zip .'
-                sh 'scp college-$number.zip root@172.31.9.96:/home/ec2-user/'
-                sh 'ssh root@172.31.9.96 "cd /home/ec2-user/ && unzip college-$number.zip && sh dependencies.sh"'
-                sh 'ssh root@172.31.9.96 "cd /home/ec2-user/ && sudo rm -rf *.zip"'
+                sh 'scp college-$number.zip ec2-user@172.31.9.96:/home/ec2-user/'
+                sh 'ssh ec2-user@172.31.9.96 "cd /home/ec2-user/ && unzip college-3.zip && sh dependencies.sh"'
+                sh 'ssh ec2-user@172.31.9.96 "cd /home/ec2-user/ && sudo rm -rf *.zip"'
                 sh 'rm -fr *.zip'
                 echo 'Flask application deployed successfully!'
             }
