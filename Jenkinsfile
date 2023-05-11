@@ -22,8 +22,8 @@ pipeline {
             steps {
                 echo 'Deploying Flask application...'
                 sh 'ssh ec2-user@172.31.7.208 "cd /home/ec2-user/ && sudo rm -rf *"'
-                sh 'aws s3 cp s3://python-flask-application/college-$number.zip .'
-                sh 'scp college-$number.zip ec2-user@172.31.7.208:/home/ec2-user/'
+                sh 'aws s3 cp s3://python-flask-application/college-3.zip .'
+                sh 'scp college-3.zip ec2-user@172.31.7.208:/home/ec2-user/'
                 sh 'ssh ec2-user@172.31.7.208 "cd /home/ec2-user/ && unzip college-3.zip && sh dependencies.sh"'
                 sh 'ssh ec2-user@172.31.7.208 "cd /home/ec2-user/ && sudo rm -rf *.zip"'
                 sh 'rm -fr *.zip'
