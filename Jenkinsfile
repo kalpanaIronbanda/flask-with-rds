@@ -53,7 +53,7 @@ pipeline{
                 script{
                 sh '''
                 echo 'running the flask application'
-                ssh ec2-user@${hostname} "sudo nohub python3 app.py &"
+                ssh ec2-user@${hostname} "sudo nohup python3 app.py &"
                 echo 'completed successfully'
                 '''
                 }
