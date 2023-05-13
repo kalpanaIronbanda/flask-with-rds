@@ -8,7 +8,7 @@ pipeline{
     stages{
         stage('Build') {
             steps {
-                scripts{
+                script{
                 sh '''
                 echo 'Building Flask application...'
                 rm -fr *.zip
@@ -23,7 +23,7 @@ pipeline{
         }
         stage('Deploy') {
             steps {
-                scripts{
+                script{
                 sh '''
                 echo 'Deploying Flask application...'
                 ssh ec2-user@${hostname} "cd /home/ec2-user/ && sudo rm -rf *"
@@ -39,7 +39,7 @@ pipeline{
         }
         stage('Installation'){
             steps{
-                scripts{
+                script{
                 sh '''
                 echo 'installing the dependencies...'
                 ssh ec2-user@${hostname} "sh dependencies.sh"
@@ -50,7 +50,7 @@ pipeline{
         }
         stage('Run'){
             steps{
-                scripts{
+                script{
                 sh '''
                 echo 'running the flask application'
                 ssh ec2-user@${hostname} "python3 app.py"
