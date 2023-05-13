@@ -14,7 +14,7 @@ pipeline{
                 rm -fr *.zip
                 zip -r college-$BUILD_NUMBER.zip *
                 aws s3 cp college-$BUILD_NUMBER.zip s3://${bucketname}/
-                scp dependencies.sh ec2-user@172.31.7.208:/home/ec2-user/
+                scp dependencies.sh ec2-user@${hostname}:/home/ec2-user/
                 rm -fr *
                 echo 'Flask application built successfully!'
                 '''
