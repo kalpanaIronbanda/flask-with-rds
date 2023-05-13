@@ -28,7 +28,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 scripts{
-                    sh '''
+                sh '''
                 echo 'Deploying Flask application...'
                 ssh ec2-user@${hostname} "cd /home/ec2-user/ && sudo rm -rf *"
                 aws s3 cp s3://${bucketname}/college-3.zip .
@@ -42,21 +42,26 @@ pipeline {
             }
         }
         stage('Installation'){
-            scripts{
+            steps{
+                scripts{
                 sh '''
                 echo 'installing the dependencies...'
                 ssh ec2-user@${hostname} "sh dependencies.sh"
                 echo 'installed successfully'
                 '''
+                }
             }
         }
         stage('Run'){
-            scripts{
+            steps{
+                scripts{
                 sh '''
                 echo 'running the flask application'
                 ssh ec2-user@${hostname} "python3 app.py"
                 echo 'completed successfully'
                 '''
+                }
+            }
         }
     }
-}
+
