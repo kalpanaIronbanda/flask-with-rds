@@ -1,13 +1,13 @@
-pipeline {
+pipeline{
     agent any
 
-    parameters {
+    parameters{
         string(name: 'BUILD_NUMBER', defaultValue: '3', description: 'Build Number')
         string(name: 'bucketname', defaultValue: 'bucket name', description: 'bucket name')
         string(name: 'hostname', defaultValue: 'host name', description: 'host name')
     }
 
-    stages {
+    stages{
         stage('Build') {
             steps {
                 scripts{
