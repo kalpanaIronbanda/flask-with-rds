@@ -63,6 +63,7 @@
                 script{
                     sh '''
                     ssh ec2-user@${hostname} "sudo netstat -anlp | grep '80'"
+                    '''
                 }
             }
         }
