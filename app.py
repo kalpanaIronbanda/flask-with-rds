@@ -31,6 +31,8 @@ def get_secret():
 
     # Parse the secret string as JSON
     secret_dict = json.loads(secret)
+    print(secret_dict)
+
 
     # Return the database credentials as a dictionary
     return {
