@@ -56,7 +56,7 @@ def index():
 
     # Execute a query to retrieve data from the "studentist" table
     cursor = cnx.cursor()
-    query = "SELECT * FROM studentist"
+    query = "SELECT * FROM studentlist"
     cursor.execute(query)
     rows = cursor.fetchall()
 
