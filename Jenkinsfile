@@ -1,12 +1,7 @@
-@GrabResolver(name='jenkins-artifactory')
-@Grab(group='com.amazonaws', module='aws-java-sdk-secretsmanager', version='1.11.1000')
-
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
-import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest
-
-pipeline{
+ pipeline{
     agent any
     parameters{
+        string(name: 'BUILD_NUMBER', defaultValue: '3', description: 'Build Number')
         string(name: 'bucketname', defaultValue: 'bucket name', description: 'bucket name')
         string(name: 'hostname', defaultValue: 'host name', description: 'host name')
     }
@@ -32,9 +27,9 @@ pipeline{
                 sh '''
                 echo 'Deploying Flask application...'
                 ssh ec2-user@${hostname} "cd /home/ec2-user/ && sudo rm -rf *"
-                aws s3 cp s3://${bucketname}/college-${BUILD_NUMBER}.zip .
-                scp college-${BUILD_NUMBER}.zip ec2-user@${hostname}:/home/ec2-user/
-                ssh ec2-user@${hostname} "cd /home/ec2-user/ && unzip college-${BUILD_NUMBER}A.zip"
+                aws s3 cp s3://${bucketname}/college-3.zip .
+                scp college-3.zip ec2-user@${hostname}:/home/ec2-user/
+                ssh ec2-user@${hostname} "cd /home/ec2-user/ && unzip college-3.zip"
                 ssh ec2-user@${hostname} "cd /home/ec2-user/ && sudo rm -rf *.zip"
                 rm -fr *.zip
                 echo 'Flask application deployed successfully!'
@@ -53,26 +48,16 @@ pipeline{
                 }
             }
         }
-        stage('Retrieve Database Credentials and Run') {
-            steps {
-                script {
-                    // retrieve secrets from AWS Secrets Manager and store them as environment variables
-                    def secrets_client = AWSSecretsManagerClientBuilder.standard().build().createSecretsManager()
-                    def response = secrets_client.getSecretValue(new GetSecretValueRequest().withSecretId("arn:aws:secretsmanager:ap-south-1:419740680543:secret:dummydatabase-MXL2Xu"))
-                    def secret_string = response.getSecretString()
-                    def secret_dict = new groovy.json.JsonSlurper().parseText(secret_string)
-                    withEnv(['DB_USERNAME=${secret_dict.username}', 'DB_PASSWORD=${secret_dict.password}', "DB_HOST=${secret_dict.host}", "DB_NAME=${secret_dict.dbname}", "DB_TABLE=${secret_dict.table}"]) {
-                        // call your application code here
-                        sh '''
-                        echo 'running the flask application'
-                        ssh ec2-user@${hostname} "sudo gunicorn app:app -b 0.0.0.0:80 -D"
-                        echo 'completed successfully'
-                        '''
-                    }
+        stage('Run'){
+            steps{
+                script{
+                sh '''
+                echo 'running the flask application'
+                ssh ec2-user@${hostname} "sudo gunicorn app:app -b 0.0.0.0:80 -D"
+                echo 'completed successfully'
+                '''
                 }
             }
         }
     }
 }
-    
-
