@@ -1,3 +1,5 @@
+@Grab(group='com.amazonaws', module='aws-java-sdk-secretsmanager', version='1.11.1000')
+
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest
 
