@@ -48,16 +48,26 @@ pipeline{
                 }
             }
         }
-        stage('Run'){
-            steps{
-                script{
+        stage('Retrieve Database Credentials and Run') {
+            steps {
+                script {
+                    // retrieve secrets from AWS Secrets Manager and store them as environment variables
+                    def secrets_client = new AmazonWebServicesClientBuilder.standard().build().createSecretsManager()
+                    def response = secrets_client.getSecretValue(new GetSecretValueRequest().withSecretId(arn:aws:secretsmanager:ap-south-1:419740680543:secret:dummydatabase-MXL2Xu))
+                    def secret_string = response.getSecretString()
+                    def secret_dict = new groovy.json.JsonSlurper().parseText(secret_string)
+                    withEnv(['DB_USERNAME=${secret_dict.username}', 'DB_PASSWORD=${secret_dict.password}', "DB_HOST=${secret_dict.host}", "DB_NAME=${secret_dict.dbname}", "DB_TABLE=${secret_dict.table}"]) {
+                        // call your application code here
                 sh '''
                 echo 'running the flask application'
-                ssh ec2-user@${hostname} "sudo nohup python3 app.py &"
+                ssh ec2-user@${hostname} "sudo gunicorn app:app -b 0.0.0.0:80 -D"
                 echo 'completed successfully'
                 '''
+                    }
                 }
             }
         }
     }
 }
+    
+
