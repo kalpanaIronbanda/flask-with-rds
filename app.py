@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 def get_secret():
     # Create a Secrets Manager client
-    client = boto3.client('secretsmanager')
+    client = boto3.client('secretsmanager', region_name='ap-south-1')
     secret_name = "your-secret-name" # replace with your own secret name
     response = client.get_secret_value(SecretId=secret_name)
     secret_value = response['SecretString']
