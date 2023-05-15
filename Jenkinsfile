@@ -1,7 +1,6 @@
 pipeline{
     agent any
     parameters{
-        string(name: 'BUILD_NUMBER', defaultValue: '3', description: 'Build Number')
         string(name: 'bucketname', defaultValue: 'bucket name', description: 'bucket name')
         string(name: 'hostname', defaultValue: 'host name', description: 'host name')
     }
@@ -27,9 +26,9 @@ pipeline{
                 sh '''
                 echo 'Deploying Flask application...'
                 ssh ec2-user@${hostname} "cd /home/ec2-user/ && sudo rm -rf *"
-                aws s3 cp s3://${bucketname}/college-3.zip .
-                scp college-3.zip ec2-user@${hostname}:/home/ec2-user/
-                ssh ec2-user@${hostname} "cd /home/ec2-user/ && unzip college-3.zip"
+                aws s3 cp s3://${bucketname}/college-${BUILD_NUMBER}.zip .
+                scp college-${BUILD_NUMBER}.zip ec2-user@${hostname}:/home/ec2-user/
+                ssh ec2-user@${hostname} "cd /home/ec2-user/ && unzip college-${BUILD_NUMBER}A.zip"
                 ssh ec2-user@${hostname} "cd /home/ec2-user/ && sudo rm -rf *.zip"
                 rm -fr *.zip
                 echo 'Flask application deployed successfully!'
