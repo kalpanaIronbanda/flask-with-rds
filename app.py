@@ -31,7 +31,6 @@ def get_secret():
 
     # Parse the secret string as JSON
     secret_dict = json.loads(secret)
-    print(secret_dict)
 
 
     # Return the database credentials as a dictionary
@@ -39,7 +38,7 @@ def get_secret():
         'user': secret_dict['username'],
         'password': secret_dict['password'],
         'host': secret_dict['host'],
-        'database': secret_dict['database']
+        'database': secret_dict['dbname']
     }
 
 @app.route('/')
