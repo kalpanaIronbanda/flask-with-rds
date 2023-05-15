@@ -52,7 +52,7 @@ pipeline{
                 script {
                     // retrieve secrets from AWS Secrets Manager and store them as environment variables
                     def secrets_client = new AmazonWebServicesClientBuilder.standard().build().createSecretsManager()
-                    def response = secrets_client.getSecretValue(new GetSecretValueRequest().withSecretId(arn:aws:secretsmanager:ap-south-1:419740680543:secret:dummydatabase-MXL2Xu))
+                    def response = secrets_client.getSecretValue(new GetSecretValueRequest().withSecretId('arn:aws:secretsmanager:ap-south-1:419740680543:secret:dummydatabase-MXL2Xu'))
                     def secret_string = response.getSecretString()
                     def secret_dict = new groovy.json.JsonSlurper().parseText(secret_string)
                     withEnv(['DB_USERNAME=${secret_dict.username}', 'DB_PASSWORD=${secret_dict.password}', "DB_HOST=${secret_dict.host}", "DB_NAME=${secret_dict.dbname}", "DB_TABLE=${secret_dict.table}"]) {
