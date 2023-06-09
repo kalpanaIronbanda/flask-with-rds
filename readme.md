@@ -1,5 +1,5 @@
-    Flask Application with RDS Credentials from Secret Manager
-    -----------------------------------------------------------
+Flask Application with RDS Credentials from Secret Manager
+-----------------------------------------------------------
 
 This Flask application demonstrates how to retrieve RDS credentials from AWS Secret Manager and use them to connect to a database. 
 
